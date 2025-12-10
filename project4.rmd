@@ -1,0 +1,117 @@
+---
+title: "Project 4"
+author: "Lina Zaroual"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+  This data is stored in the ggplot2 library and has detailed data of diamond features and prices. It has 10 columns and 53,940 rows, each row represents a certain diamond and each column represents a certain feature of the diamond. There are two categories of variables within the dataset: quantitative (carat, depth, table, price, x, y and z) and categorical (cut, color and clarity). 
+
+```{r}
+library(dplyr)
+library(ggplot2)
+glimpse(diamonds)
+```
+
+# Linear Regression Analysis
+  In Project 3, I learned that carat was most significantly related to price in comparison with the other variables in the dataset, and that is the reason I chose these two variables in my linear regression analysis. I decided to make carat as a predictor variable (x) and price as a response variable (y) due to the logical reason that the size of a diamond should be a predictor of its price and vice versa not the other way round. 
+
+## Initial Scatter Plot Analysis 
+
+```{r}
+carat_price_scatterplot <- diamonds %>%
+  ggplot(aes(x=carat, y=price)) + geom_point(color="violet", alpha=0.2) + geom_smooth(method="lm", color="black")
+
+carat_price_scatterplot
+```
+The scatter plot of price versus carat at the beginning showed that I had a major issue with the simple linear model. The data shows evident heteroscedasticity, that is there is a significant variance in price change with a rise in carat size. At lower weights (less than 1 carat) the points lie closely around the regression curve with a comparatively small range in the vertical direction. But with increased carat weights (beyond 2 carats), prices are dispersed massively on the vertical. This trend is inconsistent with a major assumption of linear regression that the variance must remain the same in all values of the predictor variable. Also, the correlation seems to be rather curved than linear and this might indicate that the information does not follow a simple linear model.
+
+```{r r}
+carat_price_scatterplot <- diamonds %>%
+  ggplot(aes(x=log(carat), y=log(price))) + geom_point(color="skyblue", alpha=0.2) + geom_smooth(method="lm", color="black")
+
+carat_price_scatterplot
+```
+  In order to solve the heteroscedasticity and non-linearity problems, I transformed both variables using a log, which made it a log(price) versus log(carat) model. Such a change significantly enhanced the fit of this model. The new scatter plot reveals much more uniform distribution of the points around the regression line over the whole range of carat values, and that the vertical dispersion is more or less constant. This is economically logical because larger diamonds are rarer exponentially in occurrence and the fact that it is challenging to find a perfect large rough diamonds inflates prices out of proportion. 
+
+## Fitted-Residuals Plot Analysis
+
+```{r fitted-residuals plot}
+carat_price_lm <- lm(log(price) ~ log(carat), data= diamonds)
+
+fitted_resid_diamonds <- 
+  tibble(fitted_values = fitted(carat_price_lm),
+         residuals = resid(carat_price_lm))
+
+fitted_resid_diamonds %>% 
+  ggplot(aes(x=fitted_values, y= residuals)) + geom_point(color="skyblue")+
+  geom_hline(yintercept=0, color="black" )
+```
+  The fitted-residuals plot shows that the heteroscedasticity problem was solved by the log transformation. The vertical dispersion of the residuals at all fitted values is now relatively constant, and there is no apparent funnel or megaphone shape as in the original untransformed model. The points are not following any systematic curved pattern on the zero line that means the linear relationship at the log scale is correct and that the model is not under- or over-predicting particular range of values in any systematic way.
+  Nothing could be more desirable to find in a good residual plot than this random scatter, which indicates that the model has included the underlying relationship between the variables with no systematic bias. The plot has some vertical bands as a result of carat being measured in discrete steps (0.30, 0.31, 0.32, etc.) and not as a truly continuous or rather is a characteristic of data than a model issue. The fact that our model passes the homoscedasticity assumption needed to make valid statistical inference is due to the fact that the variance of the fitted values remains pretty constant.
+
+## QQ Plot Analysis
+```{r QQ plot}
+fitted_resid_diamonds %>%
+  ggplot(aes(sample= residuals)) + 
+  geom_qq(color="skyblue") +
+  geom_qq_line()
+```
+  According to the QQ plot, the residuals are more or less normally distributed with few outliers in the tails. The core 80-90 percent of the data is very close to the theoretical normal line which is excellent and shows that in most cases, the majority of our residuals will follow normal distribution as it would. But there are curves above and slightly below the line on the upper right tail and the lower left tail respectively. This trend shows fatter tails than a perfect normal distribution would have, that is, there are more extreme residuals (positive and negative) than there would be under an actual normal distribution.
+  These outliers must reflect diamonds that are of atypical properties that cause them to be more or less expensive than they would be given their carat weight only. As an example, exceptions in cut, clarity, or color of the diamond may be sold at a premium price significantly higher than the price that is estimated by the model, whereas poor quality in such aspects may result in lower prices of the diamond.      Nevertheless, even with these tail deviations, the model remains useful due to a few reasons: linear regression is relatively resistant to moderate deviations of normality, particularly when we work with a large sample such as the one we have (almost 54,000 observations). The most important assumptions regarding linearity and constant variance are met satisfactorily that are more important to the model validity than perfect normality.
+
+## Model Effectiveness Summary
+  In general, the linear model with log transformation is quite useful in price prediction of diamond according to carat weight. The heteroscedasticity problem found in the initial model was adequately addressed by the transformation, the residuals are randomly scattered as a good model is fitting, and the model also reflects the exponential nature of diamond pricing that is characteristic of market conditions.
+  Albeit the amount of unexplained variance remains large, understandably because price also significantly relies on cut, clarity, and color, the other 3 Cs of diamond quality, the model gives consistent predictions and satisfies the main criteria of valid statistical inference. It is also true that the model shows that carat weight is sufficient to explain much of the price variation, but a more detailed model using quality grades would clearly make more accurate predictions.
+
+## Price Prediction
+```{r predict}
+summary(carat_price_lm)
+carat_price_lm %>%
+  predict(tibble(carat = 1.5)) %>%
+  exp()
+```
+  I applied the model to predict the price of a hypothetical 1.5 carat diamond to validate the predictive ability of the model. The price that is expected based on the model is about $9,210.93. The prediction is the estimated price of a 1.5 carat diamond of average quality of the other quality measures that were not considered in our model which includes cut grade, clarity grade, and color grade. An individual diamond may be much different in price than in this prediction based on its particular grades of quality in the other 3Cs; a 1.5 carat diamond with a flawless clarity and D color would be worth a lot more than one with poor clarity and color.
+
+# Logistic Regression Analysis
+  In performing the logistic regression analysis, I have formed a binary response variable, Ideal_cut, that would be 1 when a diamond has an Ideal cut grade and 0 when it does not. This is a binary variable, which will enable me to model the likelihood of a diamond attaining the best cut grade.
+  I have selected carat as the predictor variable since I used to think that there is a possibility that diamond size would be related to the probability of attaining the ideal proportions of the cut. This decision was driven by the economic fact that diamond cutters had to strike a balance between two opposing goals: carat weight maximization (the source of value, as price rises exponentially with size) and perfect proportions (which demands that more material should be removed off of the rough stone and hence final carat weight will go down). I thought that with bigger and more valuable rough diamonds, cutters would be more concerned with maintaining weight than with ideality of proportions.
+
+## Scatter Plot with S-Curve
+```{r}
+diamonds_copy <- 
+  diamonds %>%
+  mutate(Ideal_cut = ifelse(cut == "Ideal", 1, 0))
+
+diamonds_copy %>%
+  ggplot(aes(x = carat, y = Ideal_cut)) +
+  geom_point(alpha=0.5) +
+  geom_smooth(color= "darkblue", method = 'glm', method.args = list(family = "binomial"), se = FALSE)
+```
+  The S-curve in the scatter plot fitted with the logistic curve depicts a distinct pattern that is easy to interpret. The larger the size of the carat, the less likely it is that a diamond will possess an Ideal cut. In the case of small diamonds of about 0.3 carats, the likelihood of an ideal proportions cut is about 50 percent and hence these small diamonds have equal chances of being Ideal or non-Ideal cut.
+  This likelihood decreases significantly with size, down to approximately 25 percent of medium sized diamonds about 1 carat, and still decreases to less than 10 percent of the larger carat diamond. The S-shaped characteristic is distinctly depicted with the probability smoothly changing between high values of small carat weights to low values of large carat weights. This is because the curve is the steepest in the middle range (around 0.5-1.5 carats), meaning that this is the extent to which the carat weight acts as a very strong condition into which the cutting decision is to be made.
+
+## Model Appropriateness
+```{r}
+IdealCut_Carat_glm <- glm(Ideal_cut ~ carat, data = diamonds_copy, 
+                      family = "binomial")
+```
+
+  This logistic regression model seems to be a good and sensible predictor of Ideal cut status as dictated by carat weight. There are several reasons why the negative relationship is both practical and economically rational. To begin with, bigger rough diamonds are worth exponentially more depending on their weight, and thus the cutters have a stronger financial motivation to retain carat weight than to cut the stones to ideal proportions, whereby they must cut much of the material off, and the end weight is smaller. A cutter could compromise the quality of some of the cuts to keep a tenth of a carat in a big stone because the extra weight will ultimately make up more than the slightly lower cut grade in the ultimate sale price.
+  Second, it can be physically more difficult to hold optimal proportions in the larger stone, the accuracy of getting the right symmetry and angles is more difficult at scale. Third, there is a possibility that the market to very large diamonds is less particular to the differences in the cut grade because the value rarity and size take over at the very top of the market.
+  The systematic relationship between S-curve is not random and therefore it is true that carat is a meaningful predictor of cut quality. But the large spread of the real data about the curve makes us remember that there are other factors as well which have significant roles to play, some of the large diamonds really do get Ideal cut, and some of the small ones really do not, depending on the quality of the raw material and the skill of the cutter
+  
+## Probability Prediction
+```{r}
+IdealCut_Carat_glm %>%
+  predict(tibble(carat=3), type="response")
+```
+  As an example to demonstrate the predictive capabilities of the model, I used a 3-carat diamond to estimate the likelihood of the diamond having an Ideal cut. There is a possibility of about 10.92 as predicted by the model. The reason behind this low probability is that larger diamonds are not commonly cut to ideal proportions, probably because of the economic trade off between carat weight maximization, and ideal cut.
+  This forecast is in line with the industry experience in that the large and ideally-cut diamonds are very rare and fetch high premium prices whenever they are available. A consumer who has gone to buy a 3 carat diamond should not be surprised to find that most of the stones in the market are not of Ideal cut and even those that are of Ideal cut will cost him a significant premium over similar stones which have lower cut grades.
+
+

@@ -1,0 +1,18 @@
+# Project 1
+
+## I-94 Metro Interstate Traffic Analysis
+
+This project analyzes traffic patterns on Interstate 94 in the Minneapolis-St. Paul metro area using historical traffic data combined with weather information. The analysis explores how various factors influence traffic volume throughout different times and conditions.
+
+### Key Findings:
+
+-   Commuting Patterns: Traffic volume shows clear peaks during morning and evening rush hours (7-9 AM and 4-6 PM), suggesting work and school commutes are the primary drivers of traffic.
+-   Weekday vs. Weekend: Weekdays consistently show higher traffic volumes than weekends, with sharp spikes during commuting hours. Weekend traffic remains relatively flat throughout the day, further supporting the commuting hypothesis.
+-   Temperature Impact: After cleaning outlier data points, no strong correlation was found between temperature and traffic volume, reinforcing that traffic is driven more by necessity (work/school) than by weather-dependent leisure activities.
+-   Weather Conditions: While clear and cloudy days showed the highest total traffic volumes, this is primarily because these are the most common weather conditions in the dataset rather than indicating a direct causal relationship.
+
+Tools & Techniques: R (dplyr, ggplot2), data cleaning, exploratory data analysis, time series visualization.
+
+<a href="Project 2- Analyzing i94 data.rmd" class="projects">Download RMarkdown</a>
+
+<a href="Project-2--Analyzing-i94-data.pdf" class="projects" download>Download PDF</a>

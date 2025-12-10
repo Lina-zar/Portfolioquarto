@@ -1,0 +1,17 @@
+# Project 3
+
+## Diamond Price and Cut Quality: Linear and Logistic Regression Analysis
+
+This project employs both linear and logistic regression techniques to model relationships within the diamonds dataset (53,940 observations). The analysis explores two key questions: how carat weight predicts diamond price, and what factors influence whether a diamond receives an "Ideal" cut grade. Linear Regression Analysis - Price Prediction: The initial scatter plot revealed significant heteroscedasticity (increasing variance with carat size) and non-linearity, violating key assumptions of simple linear regression. To address this, logarithmic transformations were applied to both price and carat variables, resulting in a dramatically improved model:
+
+Model Performance: The log-transformed model achieved an R² of 0.933, meaning carat weight alone explains 93.3% of price variation Heteroscedasticity Resolution: The fitted-residuals plot showed constant variance across all fitted values, confirming the transformation successfully addressed the original problem Normality Assessment: The QQ plot revealed generally normal residuals with some fat tails, indicating outliers likely caused by exceptional quality in other characteristics (cut, clarity, color) Practical Application: The model predicted a 1.5-carat diamond would cost approximately \$9,211, though actual prices vary based on quality grades not included in the model
+
+Logistic Regression Analysis - Ideal Cut Prediction: A binary variable was created (Ideal cut = 1, non-Ideal = 0) to investigate whether carat weight predicts cut quality. The analysis revealed a surprising inverse relationship:
+
+Negative Correlation: Larger diamonds are significantly less likely to receive an Ideal cut grade. Small diamonds (\~0.3 carats) have about 50% probability of Ideal cut, while 3-carat diamonds have only \~11% probability Economic Rationale: This pattern reflects the diamond industry's trade-off between maximizing carat weight (which increases value exponentially) versus achieving ideal proportions (which requires removing more material). For larger, more valuable rough diamonds, cutters prioritize preserving weight over perfect proportions S-Curve Pattern: The logistic curve shows the steepest change in the 0.5-1.5 carat range, where cutting decisions most critically impact final value
+
+Conclusion: Carat weight is the dominant predictor of diamond price, and there exists a systematic economic trade-off where larger diamonds sacrifice cut quality to preserve valuable weight. The models effectively capture real-world industry practices and market dynamics.
+
+Tools & Techniques: R (dplyr, ggplot2), linear regression, logistic regression, log transformations, residual analysis, QQ plots, probability prediction, model diagnostics
+
+<a href="project4.pdf" class="projects" download>Download PDF</a>

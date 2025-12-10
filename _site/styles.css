@@ -1,0 +1,37 @@
+/* css styles */
+.banner_image {
+     background-image: url('Banner.jpg');
+     background-size: cover;
+     background-position: center;
+     height: 500px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     color: white;
+     font-size: 4em;
+     font-weight: bold;
+     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+     border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    
+   }
+   
+.project-card {
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.project-card:hover {
+  transform: scale(1.05);
+}
+
+.project-card img {
+  width: 100%;
+  display: block;
+}
+
+
+
+

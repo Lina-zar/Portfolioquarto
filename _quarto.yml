@@ -1,19 +1,22 @@
 project:
   type: website
+  resources:
+    - "*.pdf"
 
 website:
-  title: "PortfolioQuarto"
+  title: "Lina Zaroual"
   navbar:
     left:
-      - href: index.qmd
-        text: Home
-      - about.qmd
-
+      - href: index.qmd#projects
+        text: "My projects"
+      - href: index.qmd#aboutme
+        text: "About me"
+      - href: index.qmd#contact
+        text: "Contact"
+        
 format:
   html:
-    theme:
-      - cosmo
-      - brand
+    theme: lux
     css: styles.css
     toc: true
 

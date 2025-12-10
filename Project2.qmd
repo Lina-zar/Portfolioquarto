@@ -1,0 +1,27 @@
+# Project 2
+
+## Why Are Diamonds So Expensive? A Statistical Analysis
+
+This project investigates the factors that drive diamond pricing by analyzing a comprehensive dataset of 53,940 diamonds from the ggplot2 library. The study challenges common jewelry industry marketing that presents the "Four Cs" (carat, cut, clarity, and color) as equally important value determinants.
+
+### Key Findings:
+
+-   **Carat Weight Dominates**: Carat has an overwhelmingly strong positive correlation with price (0.92), making it by far the most important factor in determining diamond value. Size clearly matters most to the market.
+
+-   **Clarity Impact**: Diamonds with the lowest clarity grade (I1 - visible inclusions) are significantly less expensive across all carat weights. However, differences between other clarity grades are more subtle, especially in smaller diamonds.
+
+-   **Color Paradox**: Surprisingly, diamonds with color grades closer to "J" (more colored) showed higher average prices than "D" or "E" grades (colorless). This suggests that other factors like carat size may override color quality in real-world pricing.
+
+-   **Cut Quality**: While cut quality shows some influence on price, particularly in the "Fair" category which has more diamonds in lower price ranges, its effect is less predictable and significant than carat weight.
+
+-   **Physical Dimensions**: Strong correlations exist between carat, price, and physical dimensions (x, y, z), while depth and table measurements show weak or negative correlations with price.
+
+### Conclusion
+
+The market values diamond size above all else, with carat being the primary price driver. Other characteristics like clarity, color, and cut serve more as refinements rather than fundamental value determinants.
+
+**Tools & Techniques**: R (ggplot2, dplyr), correlation analysis, violin plots, data visualization, statistical analysis
+
+```{=html}
+<a href="Poster_Why_are_Diamonds_so_Expensive.pdf" class="projects" download>Download PDF</a>
+```
